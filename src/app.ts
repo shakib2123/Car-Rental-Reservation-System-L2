@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import notFound from "./app/middlewares/notFound";
 
 //Create the Express.js application
 const app = express();
@@ -13,5 +15,9 @@ app.get("/", (req, res) => {
     message: "Welcome To Car Rental Reservation System API Service!",
   });
 });
+
+app.use(globalErrorHandler);
+
+app.use(notFound);
 
 export default app;
