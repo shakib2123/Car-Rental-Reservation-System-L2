@@ -1,3 +1,5 @@
+import httpStatus from "http-status";
+import AppError from "../../errors/AppError";
 import { TCar } from "./car.interface";
 import { Car } from "./car.model";
 
@@ -16,8 +18,18 @@ const getSingleCarFromDB = async (id: string) => {
   return result;
 };
 
+const updateCarIntoDB = async (id: string, payload: Partial<TCar>) => {
+  const isCarExists = await Car.findById(id);
+  if (!isCarExists) {
+    throw new AppError(httpStatus.NOT_FOUND, "Car is not found !");
+  }
+  const result = await Car.findByIdAndUpdate(id, payload, { new: true });
+  return result;
+};
+
 export const CarServices = {
   createCarIntoDB,
   getAllCarFromDB,
   getSingleCarFromDB,
+  updateCarIntoDB,
 };

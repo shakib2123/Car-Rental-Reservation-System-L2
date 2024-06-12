@@ -51,5 +51,24 @@ const getSingleCar = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const updateCar = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await CarServices.updateCarIntoDB(id, req.body);
 
-export const CarController = { createCar, getAllCar, getSingleCar };
+  if (!result) {
+    res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Car updated successfully",
+    data: result,
+  });
+});
+
+export const CarController = { createCar, getAllCar, getSingleCar, updateCar };

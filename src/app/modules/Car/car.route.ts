@@ -19,4 +19,11 @@ router.get("/", CarController.getAllCar);
 
 router.get("/:id", CarController.getSingleCar);
 
+router.put(
+  "/:id",
+  auth(USER_ROLES.admin),
+  validateRequest(CarValidations.updateCarValidationSchema),
+  CarController.updateCar
+);
+
 export const CarRoutes = router;
