@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { role } from "./user.constant";
 
 const userValidationSchema = z.object({
   body: z.object({
@@ -11,7 +10,7 @@ const userValidationSchema = z.object({
       required_error: "Email is required",
       invalid_type_error: "Email must be a string",
     }),
-    role: z.enum([...role] as [string, ...string[]]),
+    role: z.enum(["user", "admin"]),
     password: z.string({
       required_error: "Password is required",
       invalid_type_error: "Password must be a string",
