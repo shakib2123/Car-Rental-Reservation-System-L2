@@ -28,7 +28,6 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
     ...bookingData,
     user: user?._id,
   };
-  console.log(bookingObj);
 
   const result = await BookingServices.createBookingIntoDB(bookingObj);
 
@@ -40,4 +39,45 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const BookingController = { createBooking };
+const getUsersBooking = catchAsync(async (req: Request, res: Response) => {
+  const userToken = req.headers.authorization?.split(" ")[1];
+  if (!userToken) {
+    return AuthError(req, res);
+  }
+
+  const decoded = jwt.verify(
+    userToken,
+    config.jwt_access_secret as string
+  ) as JwtPayload;
+
+  const user = await User.findOne({ email: decoded.email });
+
+  if (!user) {
+    res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+
+  const result = await BookingServices.getUsersBooking(user?._id);
+
+  if (!result) {
+    res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "My Bookings retrieved successfully",
+    data: result,
+  });
+});
+
+export const BookingController = { createBooking, getUsersBooking };
