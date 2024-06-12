@@ -17,4 +17,6 @@ router.post(
 
 router.get("/", CarController.getAllCar);
 
+router.get("/:id", CarController.getSingleCar);
+
 export const CarRoutes = router;

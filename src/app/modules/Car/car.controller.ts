@@ -6,6 +6,7 @@ import httpStatus from "http-status";
 
 const createCar = catchAsync(async (req: Request, res: Response) => {
   const result = await CarServices.createCarIntoDB(req.body);
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
@@ -15,6 +16,15 @@ const createCar = catchAsync(async (req: Request, res: Response) => {
 });
 const getAllCar = catchAsync(async (req: Request, res: Response) => {
   const result = await CarServices.getAllCarFromDB();
+
+  if (!result) {
+    res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data Found",
+      data: [],
+    });
+  }
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -23,4 +33,23 @@ const getAllCar = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const CarController = { createCar, getAllCar };
+const getSingleCar = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await CarServices.getSingleCarFromDB(id);
+  if (!result) {
+    res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "A Car retrieved successfully",
+    data: result,
+  });
+});
+
+export const CarController = { createCar, getAllCar, getSingleCar };
