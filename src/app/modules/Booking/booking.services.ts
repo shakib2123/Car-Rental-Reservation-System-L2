@@ -1,6 +1,10 @@
-import { ObjectId } from "mongoose";
 import { TBooking } from "./booking.interface";
 import { Booking } from "./booking.model";
+
+const getAllBookings = async (query: Record<string, unknown>) => {
+  const result = await Booking.find(query).populate("user car");
+  return result;
+};
 
 const createBookingIntoDB = async (payload: TBooking) => {
   const result = (await Booking.create(payload)).populate("user car");
@@ -12,4 +16,8 @@ const getUsersBooking = async (userId: any) => {
   return result;
 };
 
-export const BookingServices = { createBookingIntoDB, getUsersBooking };
+export const BookingServices = {
+  getAllBookings,
+  createBookingIntoDB,
+  getUsersBooking,
+};

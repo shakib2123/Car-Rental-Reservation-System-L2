@@ -7,6 +7,8 @@ import { USER_ROLES } from "../User/user.constant";
 
 const router = Router();
 
+router.get("/", auth(USER_ROLES.admin), BookingController.getAllBookings);
+
 router.post(
   "/",
   auth(USER_ROLES.user),
