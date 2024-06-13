@@ -11,7 +11,6 @@ import AppError from "../../errors/AppError";
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
   const { carId, ...bookingData } = req.body;
-  console.log(bookingData, carId);
   bookingData.car = carId;
 
   const userToken = req.headers.authorization?.split(" ")[1];
@@ -45,6 +44,12 @@ const getAllBookings = catchAsync(async (req: Request, res: Response) => {
   const { carId, date } = req.query;
   let queryObj: any = {};
 
+  if (req.query.carId) {
+    queryObj.car = carId;
+  }
+  if (req.query.date) {
+    queryObj.date = date;
+  }
   if (req.query.carId && req.query.date) {
     queryObj.car = carId;
     queryObj.date = date;
