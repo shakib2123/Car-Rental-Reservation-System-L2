@@ -3,8 +3,6 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { CarServices } from "./car.services";
 import httpStatus from "http-status";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import config from "../../config";
 
 const createCar = catchAsync(async (req: Request, res: Response) => {
   const result = await CarServices.createCarIntoDB(req.body);
@@ -87,8 +85,6 @@ const deleteCar = catchAsync(async (req: Request, res: Response) => {
 
 const returnCar = catchAsync(async (req: Request, res: Response) => {
   const bookingData = req.body;
-  console.log("Hello this is booking data", bookingData);
-
   const result = await CarServices.returnCarFromDB(bookingData);
 
   sendResponse(res, {
