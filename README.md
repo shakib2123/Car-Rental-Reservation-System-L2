@@ -110,6 +110,11 @@ maintainable architecture.
 
   - Endpoint: `/api/bookings`
   - Method: `GET`
+  - **Query Parameters:**
+
+    - `carId`: ID of the car for which availability needs to be checked.
+    - `date`: The specific date for which availability needs to be checked
+      (format: YYYY-MM-DD).
 
 - **Book a Car (Only Accessible to the User)**
   - Endpoint: `/api/bookings`
@@ -131,7 +136,7 @@ Follow these steps to set up the project locally on your machine.
 
 Make sure you have the following installed on your machine:
 
-- 🖥️ [**Node.js**](https://nodejs.org/en) installed on your machine (v14 or
+- 🖥️ [**Node.js**](https://nodejs.org/en) installed on your machine (v18 or
   higher recommended)
 - 🍃 [**MongoDB**](https://www.mongodb.com/) installed and running on your local
   machine or accessible through a cloud service
