@@ -11,7 +11,7 @@ maintainable architecture.
 
 ## 🔗 Live URL
 
-[Car Rental Reservation System](https://car-rental-reservation-system.netlify.app/)
+[Car Rental Reservation System](https://car-rental-reservation-system-l2.vercel.app)
 
 ## ⚙️ Technology Stack
 
