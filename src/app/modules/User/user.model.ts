@@ -14,7 +14,7 @@ const userSchema = new Schema<TUser>(
     },
     password: { type: String, required: true, select: 0 },
     phone: { type: String, required: true },
-    address: { type: String, required: true },
+    isDeleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,
@@ -23,11 +23,9 @@ const userSchema = new Schema<TUser>(
 
 //pre save middleware / hook
 userSchema.pre("save", async function (next) {
-  const user = this;
-
   //hashing password and save in database
-  user.password = await bcrypt.hash(
-    user.password,
+  this.password = await bcrypt.hash(
+    this.password,
     Number(config.bcrypt_salt_round)
   );
 

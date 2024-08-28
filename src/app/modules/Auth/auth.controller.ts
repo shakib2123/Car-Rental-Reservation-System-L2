@@ -16,6 +16,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
 
 const login = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.login(req.body);
+
   return res.status(httpStatus.OK).json({
     success: true,
     statusCode: httpStatus.OK,

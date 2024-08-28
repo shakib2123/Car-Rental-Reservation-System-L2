@@ -1,5 +1,11 @@
 export type TCar = {
   name: string;
+  model: string;
+  year: string;
+  image: string;
+  location: string;
+  ownerEmail: string;
+  OwnerName: string;
   description: string;
   color: string;
   isElectric: boolean;

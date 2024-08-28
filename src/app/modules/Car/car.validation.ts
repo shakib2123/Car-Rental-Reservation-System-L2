@@ -6,6 +6,30 @@ const createCarValidationSchema = z.object({
       required_error: "Name is required",
       invalid_type_error: "Name must be a string",
     }),
+    model: z.string({
+      required_error: "Model is required",
+      invalid_type_error: "Model must be a string",
+    }),
+    year: z.string({
+      required_error: "Year is required",
+      invalid_type_error: "Year must be a string",
+    }),
+    image: z.string({
+      required_error: "Image is required",
+      invalid_type_error: "Image must be a string",
+    }),
+    location: z.string({
+      required_error: "Location is required",
+      invalid_type_error: "Location must be a string",
+    }),
+    ownerEmail: z.string({
+      required_error: "Owner Email is required",
+      invalid_type_error: "Owner Email must be a string",
+    }),
+    ownerName: z.string({
+      required_error: "Owner Name is required",
+      invalid_type_error: "Owner Name must be a string",
+    }),
     description: z.string({
       required_error: "Description is required",
       invalid_type_error: "Description must be a string",
@@ -33,6 +57,42 @@ const updateCarValidationSchema = z.object({
         invalid_type_error: "Name must be a string",
       })
       .optional(),
+    model: z
+      .string({
+        required_error: "Model is required",
+        invalid_type_error: "Model must be a string",
+      })
+      .optional(),
+    year: z
+      .string({
+        required_error: "Year is required",
+        invalid_type_error: "Year must be a string",
+      })
+      .optional(),
+    image: z
+      .string({
+        required_error: "Image is required",
+        invalid_type_error: "Image must be a string",
+      })
+      .optional(),
+    location: z
+      .string({
+        required_error: "Location is required",
+        invalid_type_error: "Location must be a string",
+      })
+      .optional(),
+    ownerEmail: z
+      .string({
+        required_error: "Owner Email is required",
+        invalid_type_error: "Owner Email must be a string",
+      })
+      .optional(),
+    ownerName: z
+      .string({
+        required_error: "Owner Name is required",
+        invalid_type_error: "Owner Name must be a string",
+      })
+      .optional(),
     description: z
       .string({
         required_error: "Description is required",
@@ -51,7 +111,7 @@ const updateCarValidationSchema = z.object({
         invalid_type_error: "isElectric must be a boolean",
       })
       .optional(),
-    features: z.array(z.string()).optional(),
+    features: z.array(z.string()),
     pricePerHour: z
       .number({
         required_error: "PricePerHour is required",

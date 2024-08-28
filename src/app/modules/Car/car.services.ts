@@ -11,7 +11,9 @@ const createCarIntoDB = async (data: TCar) => {
   return result;
 };
 const getAllCarFromDB = async () => {
-  const result = await Car.find();
+  const result = await Car.find({
+    isDeleted: false,
+  });
   return result;
 };
 
