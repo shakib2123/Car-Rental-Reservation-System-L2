@@ -10,10 +10,8 @@ const createCarIntoDB = async (data: TCar) => {
   const result = await Car.create(data);
   return result;
 };
-const getAllCarFromDB = async () => {
-  const result = await Car.find({
-    isDeleted: false,
-  });
+const getAllCarFromDB = async (filter: Record<string, unknown>) => {
+  const result = await Car.find(filter);
   return result;
 };
 

@@ -14,6 +14,10 @@ const createCarValidationSchema = z.object({
       required_error: "Year is required",
       invalid_type_error: "Year must be a string",
     }),
+    date: z.string({
+      required_error: "Date is required",
+      invalid_type_error: "Date must be a string",
+    }),
     image: z.string({
       required_error: "Image is required",
       invalid_type_error: "Image must be a string",
@@ -37,6 +41,14 @@ const createCarValidationSchema = z.object({
     color: z.string({
       required_error: "Color is required",
       invalid_type_error: "Color must be a string",
+    }),
+    carType: z.string({
+      required_error: "Car Type is required",
+      invalid_type_error: "Car Type must be a string",
+    }),
+    seatCapacity: z.number({
+      required_error: "Seat Capacity is required",
+      invalid_type_error: "Seat Capacity must be a number",
     }),
     isElectric: z.boolean({
       required_error: "isElectric is required",
@@ -63,7 +75,7 @@ const updateCarValidationSchema = z.object({
         invalid_type_error: "Model must be a string",
       })
       .optional(),
-    year: z
+    Date: z
       .string({
         required_error: "Year is required",
         invalid_type_error: "Year must be a string",

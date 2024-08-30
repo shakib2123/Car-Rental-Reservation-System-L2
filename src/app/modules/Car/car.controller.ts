@@ -5,6 +5,7 @@ import { CarServices } from "./car.services";
 import httpStatus from "http-status";
 
 const createCar = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.body);
   const result = await CarServices.createCarIntoDB(req.body);
 
   sendResponse(res, {
@@ -15,7 +16,37 @@ const createCar = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getAllCar = catchAsync(async (req: Request, res: Response) => {
-  const result = await CarServices.getAllCarFromDB();
+  const { searchValue, carType, minPrice, maxPrice } = req.query;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const filter: any = { isDeleted: false };
+  console.log(req.query);
+
+  if (searchValue) {
+    filter.$or = [
+      { name: { $regex: searchValue, $options: "i" } },
+      { model: { $regex: searchValue, $options: "i" } },
+      { location: { $regex: searchValue, $options: "i" } },
+      { color: { $regex: searchValue, $options: "i" } },
+      { year: { $regex: searchValue } },
+      { date: { $regex: searchValue, $options: "i" } },
+      { features: { $elemMatch: { $regex: searchValue, $options: "i" } } },
+      { description: { $regex: searchValue, $options: "i" } },
+    ];
+  }
+
+  if (carType) {
+    filter.carType = carType;
+  }
+
+  if (minPrice && maxPrice) {
+    filter.pricePerHour = { $gte: minPrice, $lte: maxPrice };
+  } else if (minPrice) {
+    filter.pricePerHour = { $gte: minPrice };
+  } else if (maxPrice) {
+    filter.pricePerHour = { $lte: maxPrice };
+  }
+
+  const result = await CarServices.getAllCarFromDB(filter);
 
   if (!result) {
     res.status(httpStatus.NOT_FOUND).json({
