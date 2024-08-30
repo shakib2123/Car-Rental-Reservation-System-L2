@@ -6,5 +6,11 @@ export type TBooking = {
   endTime: string;
   user: Types.ObjectId;
   car: Types.ObjectId;
+  GPS: boolean;
+  childSeat: boolean;
+  creditCard: string;
+  drivingLicense: string;
+  passport: string;
+  userEmail: string;
   totalCost: number;
 };

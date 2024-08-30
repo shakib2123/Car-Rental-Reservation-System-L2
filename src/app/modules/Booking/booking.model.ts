@@ -17,6 +17,30 @@ const bookingSchema = new Schema<TBooking>(
       ref: "Car",
       required: true,
     },
+    GPS: {
+      type: Boolean,
+      required: true,
+    },
+    childSeat: {
+      type: Boolean,
+      required: true,
+    },
+    creditCard: {
+      type: String,
+      required: true,
+    },
+    drivingLicense: {
+      type: String,
+      required: true,
+    },
+    passport: {
+      type: String,
+      required: true,
+    },
+    userEmail: {
+      type: String,
+      required: true,
+    },
     startTime: {
       type: String,
       required: true,

@@ -3,9 +3,11 @@ import AppError from "../../errors/AppError";
 import { TUser } from "../User/user.interface";
 import { User } from "../User/user.model";
 import { TLoginUser } from "./auth.interface";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
 import { isPasswordMatched } from "./auth.utils";
+import { sendEmail } from "../../utils/sendEmail";
+import bcrypt from "bcryptjs";
 
 const register = async (payload: TUser) => {
   const user = await User.findOne({
@@ -56,4 +58,68 @@ const login = async (payload: TLoginUser) => {
   };
 };
 
-export const AuthServices = { register, login };
+const forgetPassword = async (email: string) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
+  }
+
+  // check if the  user is deleted
+  const isDeleted = user?.isDeleted;
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, "This user is deleted");
+  }
+
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  };
+
+  const resetToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: "10m",
+  });
+
+  const resetUILink = `${config.reset_pass_ui_link}?id=${user._id}&token=${resetToken}`;
+  sendEmail(user.email, resetUILink);
+};
+
+const resetPassword = async (payload: {
+  email: string;
+  id: string;
+  newPassword: string;
+  token: string;
+}) => {
+  const user = await User.findOne({ email: payload.email });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
+  }
+
+  const decoded = jwt.verify(
+    payload.token,
+    config.jwt_access_secret as string
+  ) as JwtPayload;
+
+  if (payload.id !== decoded.userId) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized!");
+  }
+
+  // hash password
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_round)
+  );
+
+  await User.findOneAndUpdate(
+    {
+      email: decoded.email,
+      role: decoded.role,
+    },
+    {
+      password: newHashedPassword,
+    }
+  );
+};
+
+export const AuthServices = { register, login, forgetPassword, resetPassword };
