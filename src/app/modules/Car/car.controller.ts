@@ -5,7 +5,6 @@ import { CarServices } from "./car.services";
 import httpStatus from "http-status";
 
 const createCar = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.body);
   const result = await CarServices.createCarIntoDB(req.body);
 
   sendResponse(res, {
@@ -19,7 +18,6 @@ const getAllCar = catchAsync(async (req: Request, res: Response) => {
   const { searchValue, carType, minPrice, maxPrice } = req.query;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const filter: any = { isDeleted: false };
-  console.log(req.query);
 
   if (searchValue) {
     filter.$or = [

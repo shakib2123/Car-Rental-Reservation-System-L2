@@ -13,4 +13,7 @@ export type TBooking = {
   passport: string;
   userEmail: string;
   totalCost: number;
+  status: string;
+  returned: boolean;
+  isPaid: boolean;
 };

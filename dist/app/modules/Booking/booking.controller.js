@@ -57,7 +57,7 @@ const createBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 }));
 const getAllBookings = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { carId, date } = req.query;
-    let queryObj = {};
+    const queryObj = {};
     if (req.query.carId) {
         queryObj.car = carId;
     }
@@ -84,9 +84,19 @@ const getAllBookings = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         data: result,
     });
 }));
+const getSingleBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield booking_services_1.BookingServices.getSingleBookingFromDB(id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Booking retrieved successfully",
+        data: result,
+    });
+}));
 const getUsersBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c;
-    const userToken = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(" ")[1];
+    var _a;
+    const userToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     if (!userToken) {
         return (0, authError_1.AuthError)(req, res);
     }
@@ -95,7 +105,7 @@ const getUsersBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
     }
-    const result = yield booking_services_1.BookingServices.getUsersBooking(user === null || user === void 0 ? void 0 : user._id);
+    const result = yield booking_services_1.BookingServices.getUsersBooking(user === null || user === void 0 ? void 0 : user._id.toString());
     if (!result || result.length === 0) {
         res.status(http_status_1.default.NOT_FOUND).json({
             success: false,
@@ -111,8 +121,52 @@ const getUsersBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0
         data: result,
     });
 }));
+const handleBookingStatus = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const payload = req.body;
+    const result = yield booking_services_1.BookingServices.handleBookingStatusIntoDB(id, payload);
+    if (!result) {
+        res.status(http_status_1.default.NOT_FOUND).json({
+            success: false,
+            statusCode: http_status_1.default.NOT_FOUND,
+            message: "No Data Found",
+            data: [],
+        });
+    }
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Booking Status updated successfully",
+        data: result,
+    });
+}));
+const updateBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const payload = req.body;
+    const result = yield booking_services_1.BookingServices.updateBookingIntoDB(id, payload);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Booking updated successfully",
+        data: result,
+    });
+}));
+const cancelBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const result = yield booking_services_1.BookingServices.cancelBookingIntoDB(id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Booking cancelled successfully",
+        data: result,
+    });
+}));
 exports.BookingController = {
     getAllBookings,
+    getSingleBooking,
     createBooking,
     getUsersBooking,
+    handleBookingStatus,
+    updateBooking,
+    cancelBooking,
 };

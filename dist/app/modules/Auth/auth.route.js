@@ -12,4 +12,6 @@ const auth_validation_1 = require("./auth.validation");
 const router = (0, express_1.Router)();
 router.post("/signup", (0, validateRequest_1.default)(user_validation_1.UserValidations.userValidationSchema), auth_controller_1.AuthController.register);
 router.post("/signin", (0, validateRequest_1.default)(auth_validation_1.AuthValidations.loginUserValidationSchema), auth_controller_1.AuthController.login);
+router.post("/forget-password", (0, validateRequest_1.default)(auth_validation_1.AuthValidations.forgetPasswordValidationSchema), auth_controller_1.AuthController.forgetPassword);
+router.post("/reset-password", (0, validateRequest_1.default)(auth_validation_1.AuthValidations.resetPasswordValidationSchema), auth_controller_1.AuthController.resetPassword);
 exports.AuthRoutes = router;

@@ -30,6 +30,8 @@ const user_model_1 = require("../User/user.model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config"));
 const auth_utils_1 = require("./auth.utils");
+const sendEmail_1 = require("../../utils/sendEmail");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const register = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.findOne({
         email: payload.email,
@@ -59,10 +61,48 @@ const login = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt_access_secret, {
         expiresIn: config_1.default.jwt_access_secret_expires_in,
     });
-    const _b = user.toObject(), { password } = _b, userData = __rest(_b, ["password"]);
+    const _a = user.toObject(), { password } = _a, userData = __rest(_a, ["password"]);
     return {
         user: userData,
         accessToken,
     };
 });
-exports.AuthServices = { register, login };
+const forgetPassword = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findOne({ email });
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "This user is not found !");
+    }
+    // check if the  user is deleted
+    const isDeleted = user === null || user === void 0 ? void 0 : user.isDeleted;
+    if (isDeleted) {
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "This user is deleted");
+    }
+    const jwtPayload = {
+        userId: user.id,
+        role: user.role,
+    };
+    const resetToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt_access_secret, {
+        expiresIn: "10m",
+    });
+    const resetUILink = `${config_1.default.reset_pass_ui_link}?id=${user._id}&token=${resetToken}`;
+    (0, sendEmail_1.sendEmail)(user.email, resetUILink);
+});
+const resetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findOne({ email: payload.email });
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "This user is not found !");
+    }
+    const decoded = jsonwebtoken_1.default.verify(payload.token, config_1.default.jwt_access_secret);
+    if (payload.id !== decoded.userId) {
+        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized!");
+    }
+    // hash password
+    const newHashedPassword = yield bcryptjs_1.default.hash(payload.newPassword, Number(config_1.default.bcrypt_salt_round));
+    yield user_model_1.User.findOneAndUpdate({
+        email: decoded.email,
+        role: decoded.role,
+    }, {
+        password: newHashedPassword,
+    });
+});
+exports.AuthServices = { register, login, forgetPassword, resetPassword };

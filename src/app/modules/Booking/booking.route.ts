@@ -21,5 +21,23 @@ router.get(
   auth(USER_ROLES.user),
   BookingController.getUsersBooking
 );
+router.get("/:id", auth(USER_ROLES.user), BookingController.getSingleBooking);
+
+router.patch(
+  "/:id",
+  auth(USER_ROLES.admin),
+  BookingController.handleBookingStatus
+);
+
+router.put(
+  "/update-booking/:id",
+  auth(USER_ROLES.user),
+  BookingController.updateBooking
+);
+router.put(
+  "/cancel-booking/:id",
+  auth(USER_ROLES.user),
+  BookingController.cancelBooking
+);
 
 export const BookingRoutes = router;

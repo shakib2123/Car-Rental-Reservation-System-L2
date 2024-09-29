@@ -86,6 +86,7 @@ const returnCarFromDB = async (payload: TReturnCar) => {
       payload.bookingId,
       {
         endTime: payload.endTime,
+        returned: true,
         totalCost,
       },
       {

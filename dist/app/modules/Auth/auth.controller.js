@@ -36,4 +36,28 @@ const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
         token: result.accessToken,
     });
 }));
-exports.AuthController = { register, login };
+const forgetPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const email = req.body.email;
+    const result = yield auth_services_1.AuthServices.forgetPassword(email);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Reset link is generated successfully",
+        data: result,
+    });
+}));
+const resetPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_services_1.AuthServices.resetPassword(req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Password reset successfully",
+        data: result,
+    });
+}));
+exports.AuthController = {
+    register,
+    login,
+    forgetPassword,
+    resetPassword,
+};

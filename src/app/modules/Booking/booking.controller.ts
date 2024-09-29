@@ -46,7 +46,8 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
 
 const getAllBookings = catchAsync(async (req: Request, res: Response) => {
   const { carId, date } = req.query;
-  let queryObj: any = {};
+
+  const queryObj: any = {};
 
   if (req.query.carId) {
     queryObj.car = carId;
@@ -77,6 +78,18 @@ const getAllBookings = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleBooking = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await BookingServices.getSingleBookingFromDB(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Booking retrieved successfully",
+    data: result,
+  });
+});
+
 const getUsersBooking = catchAsync(async (req: Request, res: Response) => {
   const userToken = req.headers.authorization?.split(" ")[1];
   if (!userToken) {
@@ -94,7 +107,7 @@ const getUsersBooking = catchAsync(async (req: Request, res: Response) => {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
 
-  const result = await BookingServices.getUsersBooking(user?._id);
+  const result = await BookingServices.getUsersBooking(user?._id.toString());
 
   if (!result || result.length === 0) {
     res.status(httpStatus.NOT_FOUND).json({
@@ -113,8 +126,60 @@ const getUsersBooking = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const handleBookingStatus = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const payload = req.body;
+
+  const result = await BookingServices.handleBookingStatusIntoDB(id, payload);
+
+  if (!result) {
+    res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Booking Status updated successfully",
+    data: result,
+  });
+});
+
+const updateBooking = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const payload = req.body;
+
+  const result = await BookingServices.updateBookingIntoDB(id, payload);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Booking updated successfully",
+    data: result,
+  });
+});
+
+const cancelBooking = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const result = await BookingServices.cancelBookingIntoDB(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Booking cancelled successfully",
+    data: result,
+  });
+});
+
 export const BookingController = {
   getAllBookings,
+  getSingleBooking,
   createBooking,
   getUsersBooking,
+  handleBookingStatus,
+  updateBooking,
+  cancelBooking,
 };

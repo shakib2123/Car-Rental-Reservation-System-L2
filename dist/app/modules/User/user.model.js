@@ -22,20 +22,19 @@ const userSchema = new mongoose_1.Schema({
     role: {
         type: String,
         enum: ["user", "admin"],
-        required: true,
+        default: "user",
     },
     password: { type: String, required: true, select: 0 },
     phone: { type: String, required: true },
-    address: { type: String, required: true },
+    isDeleted: { type: Boolean, default: false },
 }, {
     timestamps: true,
 });
 //pre save middleware / hook
 userSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = this;
         //hashing password and save in database
-        user.password = yield bcryptjs_1.default.hash(user.password, Number(config_1.default.bcrypt_salt_round));
+        this.password = yield bcryptjs_1.default.hash(this.password, Number(config_1.default.bcrypt_salt_round));
         next();
     });
 });

@@ -7,6 +7,34 @@ const carModelSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    model: {
+        type: String,
+        required: true,
+    },
+    year: {
+        type: String,
+        required: true,
+    },
+    date: {
+        type: String,
+        required: true,
+    },
+    image: {
+        type: String,
+        required: true,
+    },
+    location: {
+        type: String,
+        required: true,
+    },
+    ownerEmail: {
+        type: String,
+        required: true,
+    },
+    ownerName: {
+        type: String,
+        required: true,
+    },
     description: {
         type: String,
         required: true,
@@ -30,6 +58,10 @@ const carModelSchema = new mongoose_1.Schema({
     pricePerHour: {
         type: Number,
         required: true,
+    },
+    totalCost: {
+        type: Number,
+        default: 0,
     },
     isDeleted: {
         type: Boolean,

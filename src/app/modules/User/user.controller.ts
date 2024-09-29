@@ -22,6 +22,46 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getUser = catchAsync(async (req: Request, res: Response) => {
+  const email = req.params.email;
+  const result = await UserServices.getUserFromDB(email);
+
+  if (!result) {
+    res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User retrieved successfully",
+    data: result,
+  });
+});
+const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const updatedInfo = req.body;
+
+  const result = await UserServices.updateUserIntoDB(id, updatedInfo);
+
+  if (!result) {
+    res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data Found",
+      data: [],
+    });
+  }
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User updated successfully",
+    data: result,
+  });
+});
 const updateUserRole = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const role = req.body.role;
@@ -66,6 +106,8 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 
 export const UserController = {
   getAllUser,
+  getUser,
+  updateUser,
   updateUserRole,
   deleteUser,
 };

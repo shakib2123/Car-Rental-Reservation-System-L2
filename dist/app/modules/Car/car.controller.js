@@ -27,7 +27,34 @@ const createCar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
     });
 }));
 const getAllCar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield car_services_1.CarServices.getAllCarFromDB();
+    const { searchValue, carType, minPrice, maxPrice } = req.query;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const filter = { isDeleted: false };
+    if (searchValue) {
+        filter.$or = [
+            { name: { $regex: searchValue, $options: "i" } },
+            { model: { $regex: searchValue, $options: "i" } },
+            { location: { $regex: searchValue, $options: "i" } },
+            { color: { $regex: searchValue, $options: "i" } },
+            { year: { $regex: searchValue } },
+            { date: { $regex: searchValue, $options: "i" } },
+            { features: { $elemMatch: { $regex: searchValue, $options: "i" } } },
+            { description: { $regex: searchValue, $options: "i" } },
+        ];
+    }
+    if (carType) {
+        filter.carType = carType;
+    }
+    if (minPrice && maxPrice) {
+        filter.pricePerHour = { $gte: minPrice, $lte: maxPrice };
+    }
+    else if (minPrice) {
+        filter.pricePerHour = { $gte: minPrice };
+    }
+    else if (maxPrice) {
+        filter.pricePerHour = { $lte: maxPrice };
+    }
+    const result = yield car_services_1.CarServices.getAllCarFromDB(filter);
     if (!result) {
         res.status(http_status_1.default.NOT_FOUND).json({
             success: false,

@@ -23,8 +23,8 @@ const createCarIntoDB = (data) => __awaiter(void 0, void 0, void 0, function* ()
     const result = yield car_model_1.Car.create(data);
     return result;
 });
-const getAllCarFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield car_model_1.Car.find();
+const getAllCarFromDB = (filter) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield car_model_1.Car.find(filter);
     return result;
 });
 const getSingleCarFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -78,6 +78,7 @@ const returnCarFromDB = (payload) => __awaiter(void 0, void 0, void 0, function*
         const totalCost = Number(durationHours) * Number(isCarExists.pricePerHour);
         const updatedBooking = yield booking_model_1.Booking.findByIdAndUpdate(payload.bookingId, {
             endTime: payload.endTime,
+            returned: true,
             totalCost,
         }, {
             new: true,

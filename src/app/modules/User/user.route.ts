@@ -7,6 +7,11 @@ import { auth } from "../../middlewares/auth";
 const router = Router();
 
 router.get("/", auth(USER_ROLES.admin), UserController.getAllUser);
+
+router.get("/:email", auth(USER_ROLES.user), UserController.getUser);
+
+router.put("/:id", auth(USER_ROLES.user), UserController.updateUser);
+
 router.patch("/:id", auth(USER_ROLES.admin), UserController.updateUserRole);
 router.delete("/:id", auth(USER_ROLES.admin), UserController.deleteUser);
 

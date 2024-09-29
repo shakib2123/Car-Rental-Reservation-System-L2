@@ -21,6 +21,10 @@ const getAllBookings = (query) => __awaiter(void 0, void 0, void 0, function* ()
     const result = yield booking_model_1.Booking.find(query).populate("user car");
     return result;
 });
+const getSingleBookingFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_model_1.Booking.findById(id).populate("user car");
+    return result;
+});
 const createBookingIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const isCarExists = yield car_model_1.Car.findByIdAndUpdate(payload.car, {
         status: "unavailable",
@@ -35,8 +39,40 @@ const getUsersBooking = (userId) => __awaiter(void 0, void 0, void 0, function* 
     const result = yield booking_model_1.Booking.find({ user: userId }).populate("user car");
     return result;
 });
+const handleBookingStatusIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_model_1.Booking.findOneAndUpdate({ _id: id }, payload, {
+        new: true,
+    });
+    return result;
+});
+const updateBookingIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_model_1.Booking.findByIdAndUpdate(id, payload, {
+        new: true,
+    });
+    return result;
+});
+const cancelBookingIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const booking = yield booking_model_1.Booking.findById(id);
+    if (!booking) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Booking not found");
+    }
+    const car = yield car_model_1.Car.findById(booking.car);
+    if (!car) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Car not found");
+    }
+    car.status = "available";
+    yield car.save();
+    const result = yield booking_model_1.Booking.findByIdAndUpdate(id, {
+        status: "cancel",
+    }, { new: true });
+    return result;
+});
 exports.BookingServices = {
     getAllBookings,
     createBookingIntoDB,
+    getSingleBookingFromDB,
     getUsersBooking,
+    handleBookingStatusIntoDB,
+    updateBookingIntoDB,
+    cancelBookingIntoDB,
 };

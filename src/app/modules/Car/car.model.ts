@@ -59,6 +59,10 @@ const carModelSchema = new Schema(
       type: Number,
       required: true,
     },
+    totalCost: {
+      type: Number,
+      default: 0,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

@@ -37,10 +37,6 @@ const bookingSchema = new Schema<TBooking>(
       type: String,
       required: true,
     },
-    userEmail: {
-      type: String,
-      required: true,
-    },
     startTime: {
       type: String,
       required: true,
@@ -52,6 +48,18 @@ const bookingSchema = new Schema<TBooking>(
     totalCost: {
       type: Number,
       default: 0,
+    },
+    status: {
+      type: String,
+      default: "pending",
+    },
+    returned: {
+      type: Boolean,
+      default: false,
+    },
+    isPaid: {
+      type: Boolean,
+      default: false,
     },
   },
   {
